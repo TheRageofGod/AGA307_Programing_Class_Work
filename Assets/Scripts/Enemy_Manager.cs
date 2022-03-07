@@ -12,7 +12,8 @@ public class Enemy_Manager : MonoBehaviour
    
     void Start()
     {
-        SpawnEnemy();
+        //SpawnEnemy();
+        StartCoroutine(EnemyDelaySpawn());
     }
 
     
@@ -25,15 +26,6 @@ public class Enemy_Manager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B))
             KillSpecific("_B");
     }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -92,6 +84,17 @@ public class Enemy_Manager : MonoBehaviour
         for (int i =0; i< eCount; i++)
         {
             EnemyDestroy(enemies[0]);
+        }
+    }
+
+    IEnumerator EnemyDelaySpawn()
+    {
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            int rnd = Random.Range(0, enemyTypes.Length);
+            GameObject go = Instantiate(enemyTypes[rnd], spawnPoints[i].position, spawnPoints[i].rotation);
+            enemies.Add(go);
+            yield return new WaitForSeconds(2);
         }
     }
 
