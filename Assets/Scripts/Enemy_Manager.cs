@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum EnemyTypes
+{
+    OneHand,
+    TwoHand,
+    Archer
+}
+
 public class Enemy_Manager : MonoBehaviour
 {
     public string[] enemyNames;
