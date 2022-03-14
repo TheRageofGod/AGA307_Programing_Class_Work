@@ -9,7 +9,8 @@ public enum EnemyTypes
     Archer
 }
 
-public class Enemy_Manager : MonoBehaviour
+public enum PatrolType { Linear, Random, Loop};
+public class Enemy_Manager : GameBehaviour<Enemy_Manager>
 {
     public string[] enemyNames;
     public Transform[] spawnPoints;
@@ -17,24 +18,10 @@ public class Enemy_Manager : MonoBehaviour
 
     public List<GameObject> enemies;
    
-    void Start()
+public Transform GetRandomSpawnPoint()
     {
-        //SpawnEnemy();
-        StartCoroutine(EnemyDelaySpawn());
+        return spawnPoints[Random.Range(0, spawnPoints.Length)];
     }
-
-    
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.K))
-            KillAllEnemies();
-        //EnemyDestroy(enemies[0]);
-
-        if (Input.GetKeyDown(KeyCode.B))
-            KillSpecific("_B");
-    }
-
-
 
 
     /// <summary>
@@ -73,7 +60,7 @@ public class Enemy_Manager : MonoBehaviour
 /// Destroys an enemy based on the GameObject Passed Through
 /// </summary>
 /// <param name="_enemy"></param>
-    void EnemyDestroy(GameObject _enemy)
+   public void EnemyDestroy(GameObject _enemy)
     {
         if (enemies.Count == 0)
             return;
@@ -103,6 +90,34 @@ public class Enemy_Manager : MonoBehaviour
             enemies.Add(go);
             yield return new WaitForSeconds(2);
         }
+    }
+    void OnEnemyDied(Enemy _enemy)
+    {
+        EnemyDestroy(_enemy.gameObject);
+    }
+    void OnGameStateChange(GameState _gameState)
+    {
+        switch (_gameState)
+        {
+            case GameState.Playing:
+                StartCoroutine(EnemyDelaySpawn());
+                break;
+            case GameState.Paused:
+            case GameState.GameOver:
+                StopCoroutine(EnemyDelaySpawn());
+                break;
+
+        }
+    }
+    private void OnEnable()
+    {  
+        GameEvents.OnEnemyDied += OnEnemyDied;
+        GameEvents.OnGameStateChange += OnGameStateChange;
+    }
+    private void OnDisable()
+    {
+        GameEvents.OnEnemyDied += OnEnemyDied;
+        GameEvents.OnGameStateChange -= OnGameStateChange;
     }
 
 }
