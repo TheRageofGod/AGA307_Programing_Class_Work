@@ -22,29 +22,27 @@ public class GameManager : GameBehaviour<GameManager>
     public Difficulty difficulty;
     int scoreMultiplier = 1;
     public int score = 0;
+    bool isPaused = false;
     void Start()
     {
-       // gameState = GameState.Start;
-        difficulty = Difficulty.Easy;
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-            gameState = GameState.Playing;
-            GameEvents.ReportGameStateChange(gameState);
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            gameState = GameState.Paused;
-            GameEvents.ReportGameStateChange(gameState);
-        }
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            gameState = GameState.GameOver;
-            GameEvents.ReportGameStateChange(gameState);
-        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+            TogglePause();
+    }
+
+    public void ChangedGameState(GameState _gameState)
+    {
+        gameState = _gameState;
+        GameEvents.ReportGameStateChange(gameState);
+
+    }
+    public void ChangeDifficulty(int _difficulty)
+    {
+        difficulty = (Difficulty)_difficulty; // this is a workaround for the drop down because it can see enums only numbers
     }
     void SetUp()
     {
@@ -67,7 +65,8 @@ public class GameManager : GameBehaviour<GameManager>
     }
     public void AddScore(int _value)
     {
-        score += _value * scoreMultiplier;
+       score += _value * scoreMultiplier;
+        GameEvents.ReportScoreChange(score);
 
     }
     void OnEnemyHit(Enemy _enemy)
@@ -87,5 +86,22 @@ public class GameManager : GameBehaviour<GameManager>
     {
         GameEvents.OnEnemyHit -= OnEnemyHit;
         GameEvents.OnEnemyDied += OnEnemyDied;
+    }
+    public void TogglePause()
+    {
+        //if (gameState != GameState.Paused || gameState != GameState.Playing)
+            //return;
+        isPaused = !isPaused;
+        if (isPaused)
+        {
+            ChangedGameState(GameState.Paused);
+            Time.timeScale = 0;
+           
+        }
+        else
+        {
+            ChangedGameState(GameState.Playing);
+            Time.timeScale = 1;
+        }
     }
 }

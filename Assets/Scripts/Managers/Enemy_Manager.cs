@@ -17,8 +17,12 @@ public class Enemy_Manager : GameBehaviour<Enemy_Manager>
     public GameObject[] enemyTypes;
 
     public List<GameObject> enemies;
-   
-public Transform GetRandomSpawnPoint()
+    private void Start()
+    {
+        StartCoroutine(EnemyDelaySpawn());
+    }
+
+    public Transform GetRandomSpawnPoint()
     {
         return spawnPoints[Random.Range(0, spawnPoints.Length)];
     }
@@ -116,7 +120,7 @@ public Transform GetRandomSpawnPoint()
     }
     private void OnDisable()
     {
-        GameEvents.OnEnemyDied += OnEnemyDied;
+        GameEvents.OnEnemyDied -= OnEnemyDied;
         GameEvents.OnGameStateChange -= OnGameStateChange;
     }
 
