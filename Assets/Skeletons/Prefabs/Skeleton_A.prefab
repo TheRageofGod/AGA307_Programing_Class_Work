@@ -786,9 +786,10 @@ GameObject:
   - component: {fileID: 405068}
   - component: {fileID: 9554932}
   - component: {fileID: -6395424552341542149}
+  - component: {fileID: 5137449086454065331}
   m_Layer: 0
   m_Name: Skeleton_A
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -819,7 +820,7 @@ Animator:
   m_GameObject: {fileID: 146754}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 20300ac630e0fcd4dbab63a9b39cdafa, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8b6728929c6fd21468a0669cff296395, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -842,6 +843,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myType: 0
   health: 0
+  mySpeed: 0
+  myPatrol: 0
+  moveToPos: {fileID: 0}
+--- !u!136 &5137449086454065331
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 146754}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.3128551
+  m_Height: 1.5153931
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.7734943, z: 0.031496495}
 --- !u!1 &149742
 GameObject:
   m_ObjectHideFlags: 0

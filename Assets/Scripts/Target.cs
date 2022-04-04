@@ -2,16 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Target : MonoBehaviour
+public class Target : GameBehaviour
 {
     float moveDistance = 500f;
-
+    Animator anim;
+    int hitPoint = 3;
     void Start()
     {
+        anim = GetComponent<Animator>();
         //StartCoroutine(Move());
         StartCoroutine(moveRandom());
     }
-
+    public void Hit()
+    {
+        hitPoint--;
+        if( hitPoint != 0)
+        anim.SetTrigger("Hit");
+        else
+        {
+            anim.SetTrigger("Die");
+            Destroy(gameObject, 1);
+        }
+    }
     IEnumerator Move()
     {
        

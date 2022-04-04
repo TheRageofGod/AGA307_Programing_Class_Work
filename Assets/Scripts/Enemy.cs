@@ -18,11 +18,17 @@ public class Enemy : GameBehaviour
     Transform endPos;
     public Transform moveToPos;
 
+    Animator anim;
+    bool isDead = false;
+
+
     void Start()
     {
-        SetUp();
         SetUpAI();
-       
+        SetupEnemy();
+        StartCoroutine(Move());
+        anim = GetComponent<Animator>();
+        
 
     }
     private void Update()
@@ -94,32 +100,37 @@ public class Enemy : GameBehaviour
         StartCoroutine(Move());
     }
 
-    void SetUp()
-    {
-        switch (myType)
-        {
-            case EnemyTypes.Archer:
-            health = 50;
-                break;
-            case EnemyTypes.OneHand:
-            health = 100;
-                break;
-            case EnemyTypes.TwoHand:
-            health = 200;
-                break;
-        }
-    }
 
-    void Hit(int _damage)
+    public void Hit(int _damage)
     {
     
         health -= _damage;
         if (health <= 0)
         {
-            GameEvents.ReportEnemyDied(this);
+            if (!isDead)
+            {
+                isDead = true;
+                int randomNumber = Random.Range(1, 3);
+                StopAllCoroutines();
+                anim.SetTrigger("Die " + randomNumber);
+                GameEvents.ReportEnemyDied(this);
+            }
         }
         else
+        {
+            int randomNumber = Random.Range(1, 4);
+            anim.SetTrigger("Hit " + randomNumber);
             GameEvents.ReportEnemyHit(this);
+        }
+            
+    }
+
+    void Attack()
+    {
+        if (isDead)
+            return;
+        int randomNumber = Random.Range(1, 4);
+        anim.SetTrigger("Attack " + randomNumber);
     }
 
 
